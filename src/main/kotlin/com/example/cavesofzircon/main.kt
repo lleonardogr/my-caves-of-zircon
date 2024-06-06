@@ -11,12 +11,6 @@ import org.hexworks.zircon.api.screen.Screen
 
 fun main(args: Array<String>) {
 
-    val grid = SwingApplications.startTileGrid(
-        AppConfig.newBuilder() // 1 - We create a new AppConfig
-            .withDefaultGraphicalTileset(CP437TilesetResources.rogueYun16x16()) // 2 - We set a tileset
-            .build() // 3 - We build the AppConfig
-
-    )
-
+    val grid = SwingApplications.startTileGrid(GameConfig.buildAppConfig())
     StartView(grid).dock()
 }

@@ -1,39 +1,51 @@
 package com.example.cavesofzircon.views;
 
+import com.example.cavesofzircon.GameConfig
+import com.example.cavesofzircon.GameConfig.LOG_AREA_HEIGHT
+import com.example.cavesofzircon.GameConfig.SIDEBAR_WIDTH
+import com.example.cavesofzircon.GameConfig.WINDOW_WIDTH
+import com.example.cavesofzircon.builders.Game
+import com.example.cavesofzircon.builders.repositories.GameTileRepository
+import org.hexworks.cobalt.databinding.api.extension.toProperty
 import org.hexworks.zircon.api.ColorThemes
 import org.hexworks.zircon.api.ComponentDecorations.box
-import org.hexworks.zircon.api.ComponentDecorations.shadow
 import org.hexworks.zircon.api.Components
+import org.hexworks.zircon.api.component.ColorTheme
 import org.hexworks.zircon.api.component.ComponentAlignment
+import org.hexworks.zircon.api.game.ProjectionMode
 import org.hexworks.zircon.api.grid.TileGrid
 import org.hexworks.zircon.api.view.base.BaseView
+import org.hexworks.zircon.internal.game.impl.GameAreaComponentRenderer
 
 class PlayView(
-        private val grid: TileGrid
-) : BaseView(grid, ColorThemes.arc()
-) {
+    private val grid: TileGrid,
+    private val game: Game = Game.create(),
+    theme: ColorTheme = GameConfig.THEME
+) : BaseView(grid, theme) {
     init{
-        val loseButton = Components.button()
-            .withText("You lost! Play again?")
-            .withAlignmentWithin(screen, ComponentAlignment.LEFT_CENTER)
-            .withDecorations(box(), shadow())
+        val sidebar = Components.panel()
+            .withSize(GameConfig.SIDEBAR_WIDTH, GameConfig.WINDOW_HEIGHT)
+            .withDecorations(box())
             .build()
 
-        val winButton = Components.button()
-            .withText("You won! Play again?")
-            .withAlignmentWithin(screen, ComponentAlignment.RIGHT_CENTER)
-            .withDecorations(box(), shadow())
+        val logArea = Components.logArea()
+            .withDecorations(box(title = "Log"))            // 1
+            .withSize(WINDOW_WIDTH - SIDEBAR_WIDTH, LOG_AREA_HEIGHT)
+            .withAlignmentWithin(screen, ComponentAlignment.BOTTOM_RIGHT)      // 2
             .build()
 
-        loseButton.onActivated {
-            replaceWith(LoseView(grid))
-        }
+        val gameComponent = Components.panel()
+            .withSize(game.world.visibleSize.to2DSize())    // 1
+            .withComponentRenderer(
+                GameAreaComponentRenderer(                  // 2
+                    gameArea = game.world,
+                    projectionMode = ProjectionMode.TOP_DOWN.toProperty(), // 3
+                    fillerTile = GameTileRepository.FLOOR   // 4
+                )
+            )
+            .withAlignmentWithin(screen, ComponentAlignment.TOP_RIGHT)
+            .build()
 
-        winButton.onActivated {
-            replaceWith(WinView(grid))
-        }
-
-        screen.addComponents(loseButton, winButton)
-
+        screen.addComponents(sidebar, logArea, gameComponent)
     }
 }
