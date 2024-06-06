@@ -32,5 +32,6 @@ class StartView(
         }
 
         screen.addComponents(header, startButton) // 6 - add both components to the screen
+
     }
 }

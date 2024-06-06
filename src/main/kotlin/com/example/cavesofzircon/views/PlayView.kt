@@ -34,5 +34,6 @@ class PlayView(
         }
 
         screen.addComponents(loseButton, winButton)
+
     }
 }

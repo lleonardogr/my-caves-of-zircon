@@ -39,5 +39,6 @@ class LoseView(
         }
 
         screen.addComponents(header, restartButton, exitButton)
+
     }
 }

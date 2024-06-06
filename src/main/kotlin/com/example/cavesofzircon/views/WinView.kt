@@ -12,6 +12,7 @@ class WinView (
         private val grid: TileGrid
 ) : BaseView(grid, ColorThemes.arc()
 ){
+
     init {
         val header = Components.header()
             .withText("You won!")
