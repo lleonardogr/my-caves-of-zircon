@@ -5,9 +5,11 @@ import com.example.cavesofzircon.builders.repositories.GameTileRepository.FLOOR
 import com.example.cavesofzircon.builders.repositories.GameTileRepository.PLAYER
 import com.example.cavesofzircon.builders.repositories.GameTileRepository.WALL
 import com.example.cavesofzircon.extensions.GameEntity
+import com.example.cavesofzircon.extensions.occupiesBlock
 import com.example.cavesofzircon.extensions.tile
 import kotlinx.collections.immutable.persistentMapOf
 import org.hexworks.amethyst.api.entity.EntityType
+import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.data.BlockTileType
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BaseBlock
@@ -49,5 +51,22 @@ class GameBlock(
             entityTiles.isNotEmpty() -> entityTiles.first()         // 8
             else -> defaultTile                                     // 9
         }
+    }
+
+    companion object {
+
+        fun createWith(entity: GameEntity<EntityType>) = GameBlock(
+            currentEntities = mutableListOf(entity)
+        )
+    }
+
+    val occupier: Maybe<GameEntity<EntityType>>
+        get() = Maybe.ofNullable(currentEntities.firstOrNull { it.occupiesBlock })  // 1
+
+    val isOccupied: Boolean
+        get() = occupier.isPresent // 2
+
+    init {
+        updateContent()
     }
 }

@@ -11,4 +11,6 @@ class EntityPosition(
     private val positionProperty = initialPosition.toProperty() // 2
 
     var position: Position3D by positionProperty.asDelegate() // 3
+
+
 }
