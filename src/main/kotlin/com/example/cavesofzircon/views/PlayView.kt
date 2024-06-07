@@ -5,6 +5,7 @@ import com.example.cavesofzircon.GameConfig.LOG_AREA_HEIGHT
 import com.example.cavesofzircon.GameConfig.SIDEBAR_WIDTH
 import com.example.cavesofzircon.GameConfig.WINDOW_WIDTH
 import com.example.cavesofzircon.builders.Game
+import com.example.cavesofzircon.builders.GameBuilder
 import com.example.cavesofzircon.builders.repositories.GameTileRepository
 import org.hexworks.cobalt.databinding.api.extension.toProperty
 import org.hexworks.zircon.api.ColorThemes
@@ -14,12 +15,14 @@ import org.hexworks.zircon.api.component.ColorTheme
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.game.ProjectionMode
 import org.hexworks.zircon.api.grid.TileGrid
+import org.hexworks.zircon.api.uievent.KeyboardEventType
+import org.hexworks.zircon.api.uievent.Processed
 import org.hexworks.zircon.api.view.base.BaseView
 import org.hexworks.zircon.internal.game.impl.GameAreaComponentRenderer
 
 class PlayView(
     private val grid: TileGrid,
-    private val game: Game = Game.create(),
+    private val game: Game = GameBuilder.create(),
     theme: ColorTheme = GameConfig.THEME
 ) : BaseView(grid, theme) {
     init{
@@ -47,5 +50,11 @@ class PlayView(
             .build()
 
         screen.addComponents(sidebar, logArea, gameComponent)
+
+        // Add this to init in PlayView.kt
+        screen.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { event, _ ->
+            game.world.update(screen, event, game)
+            Processed
+        }
     }
 }
