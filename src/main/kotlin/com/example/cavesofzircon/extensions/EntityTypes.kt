@@ -6,4 +6,8 @@ class EntityTypes {
     object Wall : BaseEntityType(
         name = "wall"
     )
+
+    object Fungus : BaseEntityType(
+        name = "fungus"
+    )
 }

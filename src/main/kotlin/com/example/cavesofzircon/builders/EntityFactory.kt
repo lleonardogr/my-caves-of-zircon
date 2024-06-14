@@ -1,21 +1,16 @@
 package com.example.cavesofzircon.builders
 
-import com.example.cavesofzircon.attributes.EntityActions
-import com.example.cavesofzircon.attributes.EntityPosition
-import com.example.cavesofzircon.attributes.EntityTile
-import com.example.cavesofzircon.attributes.Player
+import com.example.cavesofzircon.attributes.*
 import com.example.cavesofzircon.attributes.flags.BlockOccupier
 import com.example.cavesofzircon.builders.repositories.GameTileRepository
 import com.example.cavesofzircon.extensions.EntityTypes
+import com.example.cavesofzircon.messages.Attack
 import com.example.cavesofzircon.messages.Dig
-import com.example.cavesofzircon.systems.CameraMover
-import com.example.cavesofzircon.systems.Diggable
+import com.example.cavesofzircon.systems.*
 import com.example.cavesofzircon.world.GameContext
 import org.hexworks.amethyst.api.builder.EntityBuilder
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.amethyst.api.newEntityOfType
-import com.example.cavesofzircon.systems.InputReceiver
-import com.example.cavesofzircon.systems.Movable
 
 fun <T : EntityType> newGameEntityOfType(
     type: T,
@@ -28,7 +23,7 @@ object EntityFactory {                                   // 2
         attributes(
             EntityPosition(),
             EntityTile(GameTileRepository.PLAYER),
-            EntityActions(Dig::class)
+            EntityActions(Dig::class, Attack::class)
         )
         behaviors(InputReceiver)
         facets(Movable, CameraMover)
@@ -40,5 +35,17 @@ object EntityFactory {                                   // 2
             BlockOccupier,
             EntityTile(GameTileRepository.WALL))
         facets(Diggable)
+    }
+
+
+    fun newFungus(fungusSpread: FungusSpread = FungusSpread()) = newGameEntityOfType(EntityTypes.Fungus) { // 1
+        attributes(
+            BlockOccupier,
+            EntityPosition(),
+            EntityTile(GameTileRepository.FUNGUS),
+            fungusSpread                                // 2
+        )
+        facets(Attackable)
+        behaviors(FungusGrowth)                         // 3
     }
 }

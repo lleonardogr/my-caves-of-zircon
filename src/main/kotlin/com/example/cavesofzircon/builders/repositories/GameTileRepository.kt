@@ -1,5 +1,6 @@
 package com.example.cavesofzircon.builders.repositories
 
+import com.example.cavesofzircon.builders.GameColors
 import com.example.cavesofzircon.builders.GameColors.ACCENT_COLOR
 import com.example.cavesofzircon.builders.GameColors.FLOOR_BACKGROUND
 import com.example.cavesofzircon.builders.GameColors.FLOOR_FOREGROUND
@@ -29,6 +30,12 @@ object GameTileRepository {
         .withCharacter('@')
         .withBackgroundColor(FLOOR_BACKGROUND)
         .withForegroundColor(ACCENT_COLOR)
+        .buildCharacterTile()
+
+    val FUNGUS = Tile.newBuilder()
+        .withCharacter('f')
+        .withBackgroundColor(GameColors.FLOOR_BACKGROUND)
+        .withForegroundColor(GameColors.FUNGUS_COLOR)
         .buildCharacterTile()
 
 }
